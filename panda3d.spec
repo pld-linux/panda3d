@@ -1,15 +1,14 @@
-#
-Summary:	Panda3D -  a library of subroutines for 3D rendering and game development.-
+Summary:	Panda3D - a library of subroutines for 3D rendering and game development
+Summary(pl.UTF-8):	Panda3D - biblioteka funkcji do renderingu i tworzenia gier 3D
 Name:		panda3d
 Version:	1.3.2
 Release:	0.1
 License:	other
-Group:		Applications
-Source0:	http://panda3d.org/download/panda3d-1.3.2/%{name}-%{version}.tar.gz
+Group:		Libraries/Python
+Source0:	http://panda3d.org/download/panda3d-%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	2332e4a625d6beb3d480aa4825b2ee89
 URL:		http://panda3d.org/
-Requires:	python
-BuildArch:	noarch
+%pyrequires_eq	python-libs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -22,13 +21,23 @@ Panda3D is unusual in that its design emphasis is on supporting a
 short learning curve and rapid development. It is ideal whenever
 deadlines are tight and turnaround time is of the essence.
 
+%description -l pl.UTF-8
+Panda3D to silnik 3D - biblioteka funkcji do renderingu i tworzenia
+gier 3D. Biblioteka jest w C++ z zestawem dowiązań Pythona. Tworzenie
+gier przy użyciu silnika Panda3D zwykle składa się z pisania programu
+w Pythonie sterującego biblioteką Panda3D.
+
+Panda3D jest silnikiem niezwykłym w tym, że projekt skupia się na
+wspieraniu krótkiej krzywej nauki i szybkim rozwoju. Jest to idealne
+kiedy terminy są napięte, a czas jest istotny.
+
 %prep
 %setup -q
 
 %build
 %{__python} makepanda/makepanda.py \
-		--version 1.3.2 \
-		--everything
+	--version %{version} \
+	--everything
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -62,6 +71,7 @@ cp built/bin/*               $RPM_BUILD_ROOT%{_bindir}
 
 for x in built/lib/* ; do
   base=`basename $x`
+# FIXME: should be py_sitedir
   ln -sf %{_libdir}/%{name}/$base $RPM_BUILD_ROOT%{py_dyndir}/$base
 done
 for x in $RPM_BUILD_ROOT%{_datadir}/%{name}/direct/src/* ; do
@@ -69,6 +79,7 @@ for x in $RPM_BUILD_ROOT%{_datadir}/%{name}/direct/src/* ; do
     python -c "import compileall; compileall.compile_dir('$x')"
   fi
 done
+# XXX: use py_[o]comp, py_postclean
 python -c "import compileall ; compileall.compile_dir('$RPM_BUILD_ROOT%{_datadir}/%{name}/Pmw');"
 python -c "import compileall ; compileall.compile_dir('$RPM_BUILD_ROOT%{_datadir}/%{name}/SceneEditor');"
 
@@ -81,9 +92,12 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc doc/LICENSE doc/README doc/ReleaseNotes 
-%{_datadir}/%{name}
-%{_sysconfdir}/ld.so.conf.d/panda3d.conf
-%{_libdir}/*
-%{_includedir}/%{name}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 %attr(755,root,root) %{_bindir}/*
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/Confauto.prc
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/Config.prc
+%{_libdir}/%{name}
+%{_datadir}/%{name}
+%{py_sitedir}/panda3d.pth
+# -devel?
+%{_includedir}/%{name}
+%{_sysconfdir}/ld.so.conf.d/panda3d.conf
