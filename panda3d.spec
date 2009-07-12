@@ -34,7 +34,12 @@ wspieraniu krótkiej krzywej nauki i szybkim rozwoju. Jest to idealne
 kiedy terminy są napięte, a czas jest istotny.
 
 %prep
-%setup -q
+%ifarch %{x8664} ppc64
+	%define src 1
+%else
+	%define src 0
+%endif
+%setup -qT -b %{src}
 
 %build
 %{__python} makepanda/makepanda.py \
