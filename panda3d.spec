@@ -1,12 +1,14 @@
 Summary:	Panda3D - a library of subroutines for 3D rendering and game development
 Summary(pl.UTF-8):	Panda3D - biblioteka funkcji do renderingu i tworzenia gier 3D
 Name:		panda3d
-Version:	1.3.2
+Version:	1.6.2
 Release:	0.1
 License:	other
 Group:		Libraries/Python
-Source0:	http://panda3d.org/download/panda3d-%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	2332e4a625d6beb3d480aa4825b2ee89
+Source0:	http://panda3d.org/download/panda3d-%{version}/%{name}-%{version}-linux32.tar.gz
+# Source0-md5:	5ee2a850f4ef645e374858eb7bf6023d
+Source1:	http://panda3d.org/download/panda3d-%{version}/%{name}-%{version}-linux64.tar.gz
+# Source1-md5:	8c1f011e684ef69179b570f5892b46a6
 URL:		http://panda3d.org/
 %pyrequires_eq	python-libs
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
